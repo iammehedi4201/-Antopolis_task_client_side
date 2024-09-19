@@ -17,7 +17,8 @@ export const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
   "& .MuiPaper-root": {
-    borderRadius: "24px", // Add border-radius effect
+    borderRadius: "15px", // Add border-radius effect
+    padding: "10px", 
   },
 }));
 
@@ -27,6 +28,7 @@ type TModalProps = {
   title: string;
   children: React.ReactNode;
   sx?: SxProps;
+  dialogeContentSx?: SxProps;
 };
 
 export default function Modal({
@@ -35,6 +37,7 @@ export default function Modal({
   title = "",
   children,
   sx,
+  dialogeContentSx,
 }: TModalProps) {
   const handleClose = () => {
     setOpen(false);
@@ -65,8 +68,7 @@ export default function Modal({
         </IconButton>
         <DialogContent
           sx={{
-            width: "352px",
-            height: "200px",
+            ...dialogeContentSx,
           }}
         >
           {children}

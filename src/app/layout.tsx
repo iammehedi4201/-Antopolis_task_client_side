@@ -25,7 +25,6 @@ export default function RootLayout({
           className={inter.className}
           style={{
             backgroundColor: theme.palette.background.default,
-            minHeight: "100vh",
           }}
         >
           <Toaster position="bottom-right" />

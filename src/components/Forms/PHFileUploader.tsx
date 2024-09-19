@@ -13,6 +13,8 @@ type TProps = {
 
 export default function PHFileUploader({ name, label, sx }: TProps) {
   const { control } = useFormContext();
+  const [fileName, setFileName] = React.useState<string | null>(null);
+
   return (
     <Controller
       name={name}
@@ -27,14 +29,17 @@ export default function PHFileUploader({ name, label, sx }: TProps) {
             startIcon={<CloudUploadIcon />}
             sx={{ ...sx }}
           >
-            {label || "Upload file"}
+            {fileName || label || "Upload file"}
             <Input
               {...field}
-              type={name}
-              value={value?.fileName}
-              onChange={(e) =>
-                onChange((e?.target as HTMLInputElement).files?.[0])
-              }
+              type="file"
+              onChange={(e) => {
+                const file = (e?.target as HTMLInputElement).files?.[0];
+                if (file) {
+                  setFileName(file.name);
+                  onChange(file);
+                }
+              }}
               style={{ display: "none" }}
             />
           </Button>

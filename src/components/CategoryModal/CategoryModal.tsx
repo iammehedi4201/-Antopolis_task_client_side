@@ -22,11 +22,24 @@ const CategoryModal = ({ open, setOpen }: TProps) => {
   };
 
   return (
-    <Modal open={open} setOpen={setOpen} title="Add Animal">
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      title="Save"
+      dialogeContentSx={{
+        width: "352px",
+        height: "150px",
+      }}
+    >
       <PHForm onSubmit={handleFormSubmit}>
         <Grid container spacing={"16px"}>
           <Grid size={{ mobile: 6, laptop: 12 }}>
-            <PHInput name="title" label="Title" fullWidth={true} />
+            <PHInput
+              name="title"
+              label="Title"
+              fullWidth={true}
+              size="medium"
+            />
           </Grid>
           {/* <Grid size={{ mobile: 6, laptop: 12 }}>
             <PHFileUploader

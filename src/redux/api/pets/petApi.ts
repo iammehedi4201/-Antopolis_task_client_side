@@ -5,20 +5,22 @@ const petApi = baseApi.injectEndpoints({
     getAllPets: builder.query({
       query: (arg: Record<string, any>) => {
         return {
-          url: `/pets`,
+          url: `/pet/get-pets`,
           method: "GET",
           params: arg,
         };
       },
+      providesTags: ["pet"],
     }),
     addPet: builder.mutation({
       query: (data) => {
         return {
-          url: `/pets`,
+          url: `/pet/create-pet`,
           method: "POST",
           data,
         };
       },
+      invalidatesTags: ["pet"],
     }),
     DeletePetById: builder.mutation({
       query: (id: string) => {

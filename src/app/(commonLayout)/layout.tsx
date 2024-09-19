@@ -10,7 +10,6 @@ const CommonLayout = ({ children }: { children: React.ReactNode }) => {
           minHeight: "100vh",
         }}
       >
-        {" "}
         {children}
       </Container>
     </div>

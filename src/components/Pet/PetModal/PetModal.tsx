@@ -2,12 +2,15 @@ import PHFileUploader from "@/components/Forms/PHFileUploader";
 import PHForm from "@/components/Forms/PHForm";
 import PHInput from "@/components/Forms/PHInput";
 import Modal from "@/components/Shared/PHModal/Modal";
+import { useAddPetMutation } from "@/redux/api/pets/petApi";
+import { uploadImgToIMGBB } from "@/utils/uploadImgToIMGBB";
 
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 import React from "react";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 
 type TProps = {
   open: boolean;
@@ -15,18 +18,55 @@ type TProps = {
 };
 
 const PetModal = ({ open, setOpen }: TProps) => {
+  //: Create a new animal
+  const [createAnimal] = useAddPetMutation();
+
   const handleFormSubmit = async (values: FieldValues) => {
-    // const data = modifyPayload(values);
+    let toastId = toast.loading("Creating Animal...");
     try {
-    } catch (err: any) {}
+      const { imgUrl } = await uploadImgToIMGBB(values.file);
+      const response = await createAnimal({
+        ...values,
+        image: imgUrl,
+      }).unwrap();
+      if (response.success) {
+        toast.success("Animal Created Successfully", { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.errorDetails, { id: toastId });
+    }
   };
 
   return (
-    <Modal open={open} setOpen={setOpen} title="Add Animal">
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      title="Create Animal"
+      sx={{
+        padding: "5px",
+      }}
+      dialogeContentSx={{
+        width: "380px",
+        height: "310px",
+      }}
+    >
       <PHForm onSubmit={handleFormSubmit}>
         <Grid container spacing={"16px"}>
           <Grid size={{ mobile: 6, laptop: 12 }}>
-            <PHInput name="title" label="Title" fullWidth={true} />
+            <PHInput
+              name="name"
+              label="Animal Name"
+              fullWidth={true}
+              size="medium"
+            />
+          </Grid>
+          <Grid size={{ mobile: 6, laptop: 12 }}>
+            <PHInput
+              name="category"
+              label="Category Name"
+              fullWidth={true}
+              size="medium"
+            />
           </Grid>
           <Grid size={{ mobile: 6, laptop: 12 }}>
             <PHFileUploader
@@ -34,6 +74,7 @@ const PetModal = ({ open, setOpen }: TProps) => {
               label="Image Upload"
               sx={{
                 width: "100%",
+                height: "52px",
                 backgroundColor: "white",
                 border: "1px solid #ccc",
                 borderRadius: "4px",
