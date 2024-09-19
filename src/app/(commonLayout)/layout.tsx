@@ -1,12 +1,18 @@
-import Footer from "@/components/Shared/Footer";
-import Navbar from "@/components/Shared/Navbar";
+import { Container } from "@mui/material";
 
 const CommonLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <Navbar />
-      <div className="min-h-screen p-4"> {children}</div>
-      <Footer />
+      <Container
+        sx={{
+          my: 2,
+          p: 2,
+          minHeight: "100vh",
+        }}
+      >
+        {" "}
+        {children}
+      </Container>
     </div>
   );
 };

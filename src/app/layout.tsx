@@ -1,6 +1,10 @@
+import Providers from "@/lib/Provider/Provider";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
+import { theme } from "@/lib/Theme/theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +19,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body
+          className={inter.className}
+          style={{
+            backgroundColor: theme.palette.background.default,
+            minHeight: "100vh",
+          }}
+        >
+          <Toaster position="bottom-right" />
+          <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+        </body>
+      </html>
+    </Providers>
   );
 }
