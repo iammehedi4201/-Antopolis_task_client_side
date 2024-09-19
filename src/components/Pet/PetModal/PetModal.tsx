@@ -4,6 +4,7 @@ import PHInput from "@/components/Forms/PHInput";
 import Modal from "@/components/Shared/PHModal/Modal";
 import { useAddPetMutation } from "@/redux/api/pets/petApi";
 import { uploadImgToIMGBB } from "@/utils/uploadImgToIMGBB";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -11,10 +12,34 @@ import Grid from "@mui/material/Grid2";
 import React from "react";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 type TProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type DefaultValues = {
+  name: string;
+  category: string;
+  image: string;
+};
+
+const AnimalSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  category: z.string().min(1, { message: "Category is required" }),
+  file: z
+    .any()
+    .refine((file) => file instanceof File, {
+      message: "Input not instance of File",
+    })
+    .refine((file) => file && file.size > 0, { message: "Image is required" }),
+});
+
+const defaultValues: DefaultValues = {
+  name: "",
+  category: "",
+  image: "",
 };
 
 const PetModal = ({ open, setOpen }: TProps) => {
@@ -27,6 +52,7 @@ const PetModal = ({ open, setOpen }: TProps) => {
       const { imgUrl } = await uploadImgToIMGBB(values.file);
       const response = await createAnimal({
         ...values,
+        category: values.category.toLowerCase(),
         image: imgUrl,
       }).unwrap();
       if (response.success) {
@@ -50,7 +76,11 @@ const PetModal = ({ open, setOpen }: TProps) => {
         height: "310px",
       }}
     >
-      <PHForm onSubmit={handleFormSubmit}>
+      <PHForm
+        onSubmit={handleFormSubmit}
+        resolver={zodResolver(AnimalSchema)}
+        defaultValues={defaultValues}
+      >
         <Grid container spacing={"16px"}>
           <Grid size={{ mobile: 6, laptop: 12 }}>
             <PHInput

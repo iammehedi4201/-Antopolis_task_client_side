@@ -5,22 +5,25 @@ const categoryApi = baseApi.injectEndpoints({
     getAllCategory: builder.query({
       query: (arg: Record<string, any>) => {
         return {
-          url: `/category`,
+          url: `/category/get-all-categories`,
           method: "GET",
           params: arg,
         };
       },
+      providesTags: ["category"],
     }),
-    addPet: builder.mutation({
+    createCategory: builder.mutation({
       query: (data) => {
         return {
-          url: `/category`,
+          url: `/category/create-category`,
           method: "POST",
           data,
         };
       },
+      invalidatesTags: ["category"],
     }),
   }),
 });
 
-export const { useGetAllCategoryQuery } = categoryApi;
+export const { useGetAllCategoryQuery, useCreateCategoryMutation } =
+  categoryApi;

@@ -22,19 +22,18 @@ const petApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["pet"],
     }),
-    DeletePetById: builder.mutation({
-      query: (id: string) => {
+    DeletePet: builder.mutation({
+      query: (data) => {
         return {
-          url: `/pets/${id}`,
+          url: `/pet/delete-pets`,
           method: "DELETE",
+          data: { ids: data },
         };
       },
+      invalidatesTags: ["pet"],
     }),
   }),
 });
 
-export const {
-  useGetAllPetsQuery,
-  useAddPetMutation,
-  useDeletePetByIdMutation,
-} = petApi;
+export const { useGetAllPetsQuery, useAddPetMutation, useDeletePetMutation } =
+  petApi;

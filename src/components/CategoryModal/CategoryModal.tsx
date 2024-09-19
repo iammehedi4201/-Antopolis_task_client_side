@@ -2,12 +2,14 @@ import PHFileUploader from "@/components/Forms/PHFileUploader";
 import PHForm from "@/components/Forms/PHForm";
 import PHInput from "@/components/Forms/PHInput";
 import Modal from "@/components/Shared/PHModal/Modal";
+import { useCreateCategoryMutation } from "@/redux/api/category/categoryApi";
 
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 import React from "react";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 
 type TProps = {
   open: boolean;
@@ -15,10 +17,23 @@ type TProps = {
 };
 
 const CategoryModal = ({ open, setOpen }: TProps) => {
+  // Create a new category
+  const [createCategory] = useCreateCategoryMutation();
+
   const handleFormSubmit = async (values: FieldValues) => {
-    // const data = modifyPayload(values);
+    const toastId = toast.loading("Creating Category...");
     try {
-    } catch (err: any) {}
+      const response = await createCategory({
+        ...values,
+      }).unwrap();
+
+      if (response.success) {
+        toast.success("Category Created Successfully", { id: toastId });
+        setOpen(false);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.errorDetails, { id: toastId });
+    }
   };
 
   return (
@@ -33,29 +48,14 @@ const CategoryModal = ({ open, setOpen }: TProps) => {
     >
       <PHForm onSubmit={handleFormSubmit}>
         <Grid container spacing={"16px"}>
-          <Grid size={{ mobile: 6, laptop: 12 }}>
+          <Grid size={{ mobile: 12, laptop: 12 }}>
             <PHInput
-              name="title"
-              label="Title"
+              name="name"
+              label="Category Name"
               fullWidth={true}
               size="medium"
             />
           </Grid>
-          {/* <Grid size={{ mobile: 6, laptop: 12 }}>
-            <PHFileUploader
-              name="file"
-              label="Image Upload"
-              sx={{
-                width: "100%",
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                padding: "10px",
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                color: "black",
-              }}
-            />
-          </Grid> */}
         </Grid>
         <Button
           sx={{
